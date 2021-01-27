@@ -19,9 +19,13 @@ public class CurrencyScoopAPI {
     }
 
     //Get request used to retrieve rates for a given date.
+    // Maybe call this one call API? I usually dont like adding scope terms in method names.
     private String getRatesPrivate(String date) throws UnirestException {
+        // Can the get() return null? at which point you might get NPE?
         HttpResponse<String> response = Unirest.get("https://api.currencyscoop.com/v1/historical?api_key=" + api_key + "&base=GBP&date=" + date)
                 .asString();
+        
+        // Can the response be null? At which point you might get NPE?
         return response.getBody();
     }
 
