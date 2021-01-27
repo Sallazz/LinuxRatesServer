@@ -10,6 +10,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+// In general look into the DAO pattern, will come in useful for stuff like that: https://www.baeldung.com/java-dao-pattern
 public class DataSource {
 
     //Instance variables.
@@ -36,31 +37,41 @@ public class DataSource {
         return getFromTable(date);
     }
     public String getRate(String date){ return getRateFromTable(date); }
+    
+    // You can actually call that smth like saveRate etc. You can usually safely assume that the DB schema will be correct, and you dont need to run CREATE if it not exists.
     public void addRatesTable(List<Rate> rates, String date){ addTable(rates, date); }
 
     //Retrieves a rate for a given date and currency.
     private String getRateFromTable(String date){
         System.out.println("date = " + date);
+        // How can a date be "connection check". If the "date" can be multiple things then better rename that.
+        // What if the name is null? NPE
         if (date.equals("connection check")){
-            return "echo connection check";
+            return "echo connection check"; // Here the "getRate" will return a non-rate. Not ideal and can get confusing for the classes using the interface
         }else{
             String resultString = "";
             try{
                 conn = DriverManager.getConnection(CONNECTION_STRING);
                 Statement statement = conn.createStatement();
                 String[] query = date.split("\\|");
-                System.out.println("SELECT * FROM " + query[0] + " WHERE country = " + "\"" + query[1] + "\""); //For debugging purposes
+                System.out.println("SELECT * FROM " + query[0] + " WHERE country = " + "\"" + query[1] + "\""); //For debugging purposes  ---> A lot of strings created. Use break points in the IDE instead or avoid "+".
+                // Check the query builder to avoid the below many strings and hard to read: https://docs.oracle.com/javaee/6/tutorial/doc/bnbrg.html
                 ResultSet result = statement.executeQuery("SELECT * FROM " + query[0] + " WHERE country = " + "\"" + query[1] + "\"");
-                Rate returnedRate = new Rate(result.getString(COLUMN_DATE), result.getString(COLUMN_COUNTRY), result.getDouble(COLUMN_RATE));
+                Rate returnedRate = new Rate(result.getString(COLUMN_DATE), 
+                                             result.getString(COLUMN_COUNTRY), 
+                                             result.getDouble(COLUMN_RATE)); // Easier to read when you align like that.
+                
                 resultString = (returnedRate.getDate() + "|" + returnedRate.getCountry() + "|" + returnedRate.getRate());
             }catch (SQLException e){
                 System.out.println("Unable to retrieve requested rate: " + date);
-                resultString = "Unable to retrieve requested rate!";
+                resultString = "Unable to retrieve requested rate!"; // Same, dont return unexpected results.
             }
+            // Leave an empty line.
             return resultString;
         }
     }
-
+// --> review TBC.
+    
     //Retrieves rates for a given date.
     private List<Rate> getFromTable(String date){
         List<Rate> rates = new ArrayList<>();
