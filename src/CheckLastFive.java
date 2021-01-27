@@ -71,7 +71,8 @@ public class CheckLastFive {
             System.out.println("UnirestException caught in CheckLastFive -> checkTable()"); // Consider you messages and who will be reading it? Support? dev? Consider writing your logs in more english focused text. Like API is down, will retry. or Table not found etc.
         }
     }
-
+    
+    // The name checkAPI it doesnt just check right?? It populates data as well. Please rename.
     private void checkAPI(String date) throws UnirestException {
         String response = new CurrencyScoopAPI().getRates(date);
         rates = new ResponseInterpreter().getRates(response);
@@ -79,6 +80,7 @@ public class CheckLastFive {
         data.addRatesTable(rates, date); // What if the API is down?
     }
 
+    // Remove blank extra rows.
 
 
 
