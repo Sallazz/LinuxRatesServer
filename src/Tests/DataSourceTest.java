@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 public class DataSourceTest {
 
     DataSource data = new DataSource();
-
+    // Make sure your tests' names reflect what they are testing. This way a person reading those will understand what they are testing without having to read the whole test (which can get big).
     @Test
     public void getRates() {
         assertNotNull(data.getRates("2021-01-25"));
