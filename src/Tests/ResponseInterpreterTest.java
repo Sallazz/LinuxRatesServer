@@ -6,7 +6,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class ResponseInterpreterTest {
-
+    // Same as the other two files, change the name of the test, make sure it has a purpose and extract the expected to make it more readable.
+    
     @Test
     public void getRates() {
         ResponseInterpreter resp = new ResponseInterpreter();
