@@ -4,6 +4,7 @@
 
 package data;
 
+// Might be worht spliting an interface out of this and other objects of that kind, easier to mock for tests and better practice to achieve loose coupling.
 public class Rate {
 
     //Instance variables.
